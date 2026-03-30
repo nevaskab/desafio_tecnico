@@ -7,7 +7,7 @@ defmodule DesafioTecnicoWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_desafio_tecnico_key",
-    signing_salt: "sw2dt5HV",
+    signing_salt: "e+GZSrHi",
     same_site: "Lax"
   ]
 
@@ -35,10 +35,6 @@ defmodule DesafioTecnicoWeb.Endpoint do
     plug Phoenix.CodeReloader
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :desafio_tecnico
   end
-
-  plug Phoenix.LiveDashboard.RequestLogger,
-    param_key: "request_logger",
-    cookie_key: "request_logger"
 
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
