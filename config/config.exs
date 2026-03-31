@@ -7,6 +7,19 @@
 # General application configuration
 import Config
 
+config :desafio_tecnico, :scopes,
+  users: [
+    default: true,
+    module: DesafioTecnico.Accounts.Scope,
+    assign_key: :current_scope,
+    access_path: [:users, :id],
+    schema_key: :users_id,
+    schema_type: :id,
+    schema_table: :users,
+    test_data_fixture: DesafioTecnico.AccountsFixtures,
+    test_setup_helper: :register_and_log_in_users
+  ]
+
 config :desafio_tecnico,
   ecto_repos: [DesafioTecnico.Repo],
   generators: [timestamp_type: :utc_datetime]
