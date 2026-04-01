@@ -15,6 +15,19 @@
 import Config
 
 config :desafio_tecnico, :scopes,
+  accounts_user: [
+    default: false,
+    module: DesafioTecnico.Accounts.Scope,
+    assign_key: :current_scope,
+    access_path: [:user, :id],
+    schema_key: :user_id,
+    schema_type: :id,
+    schema_table: :users,
+    test_data_fixture: DesafioTecnico.AccountsFixtures,
+    test_setup_helper: :register_and_log_in_user
+  ]
+
+config :desafio_tecnico, :scopes,
   user: [
     default: true,
     module: DesafioTecnico.Accounts.Scope,
