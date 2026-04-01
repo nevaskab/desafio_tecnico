@@ -30,7 +30,7 @@ defmodule DesafioTecnico.TelemetryFixtures do
     attrs =
       Enum.into(attrs, %{
         last_payload: %{},
-        last_seen_at: ~U[2026-03-30 15:42:00Z],
+        last_seen_at: ~U[2026-03-31 14:57:00Z],
         status: "some status",
         total_events_processed: 42
       })
