@@ -16,18 +16,18 @@ defmodule DesafioTecnico.Accounts.Scope do
   growing application requirements.
   """
 
-  alias DesafioTecnico.Accounts.Users
+  alias DesafioTecnico.Accounts.User
 
-  defstruct users: nil
+  defstruct user: nil
 
   @doc """
-  Creates a scope for the given users.
+  Creates a scope for the given user.
 
-  Returns nil if no users is given.
+  Returns nil if no user is given.
   """
-  def for_users(%Users{} = users) do
-    %__MODULE__{users: users}
+  def for_user(%User{} = user) do
+    %__MODULE__{user: user}
   end
 
-  def for_users(nil), do: nil
+  def for_user(nil), do: nil
 end
