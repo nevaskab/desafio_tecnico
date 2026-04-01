@@ -72,4 +72,10 @@ defmodule DesafioTecnicoWeb.Router do
     post "/users/log-in", UserSessionController, :create
     delete "/users/log-out", UserSessionController, :delete
   end
+
+  scope "/" do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live "/dashboard", DesafioTecnicoWeb.DashboardLive
+  end
 end
