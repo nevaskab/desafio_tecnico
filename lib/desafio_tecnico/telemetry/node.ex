@@ -5,19 +5,19 @@ defmodule DesafioTecnico.Telemetry.Node do
   schema "nodes" do
     field :machine_identifier, :string
     field :location, :string
-    field :users_id, :id
+    field :user_id, :id
 
-    has_one :metric, DesafioTecnico.Telemetry.NodeMetric
+    has_one :node_metric, DesafioTecnico.Telemetry.NodeMetric
 
     timestamps(type: :utc_datetime)
   end
 
   @doc false
-  def changeset(node, attrs, users_scope) do
+  def changeset(node, attrs, user_scope) do
     node
     |> cast(attrs, [:machine_identifier, :location])
     |> validate_required([:machine_identifier, :location])
     |> unique_constraint(:machine_identifier)
-    |> put_change(:users_id, users_scope.users.id)
+    |> put_change(:user_id, user_scope.user.id)
   end
 end

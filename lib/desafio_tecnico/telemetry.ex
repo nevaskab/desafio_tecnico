@@ -20,15 +20,15 @@ defmodule DesafioTecnico.Telemetry do
 
   """
   def subscribe_nodes(%Scope{} = scope) do
-    key = scope.users.id
+    key = scope.user.id
 
-    Phoenix.PubSub.subscribe(DesafioTecnico.PubSub, "users:#{key}:nodes")
+    Phoenix.PubSub.subscribe(DesafioTecnico.PubSub, "user:#{key}:nodes")
   end
 
   defp broadcast_node(%Scope{} = scope, message) do
-    key = scope.users.id
+    key = scope.user.id
 
-    Phoenix.PubSub.broadcast(DesafioTecnico.PubSub, "users:#{key}:nodes", message)
+    Phoenix.PubSub.broadcast(DesafioTecnico.PubSub, "user:#{key}:nodes", message)
   end
 
   @doc """
@@ -41,7 +41,7 @@ defmodule DesafioTecnico.Telemetry do
 
   """
   def list_nodes(%Scope{} = scope) do
-    Repo.all_by(Node, users_id: scope.users.id)
+    Repo.all_by(Node, user_id: scope.user.id)
   end
 
   @doc """
@@ -59,7 +59,7 @@ defmodule DesafioTecnico.Telemetry do
 
   """
   def get_node!(%Scope{} = scope, id) do
-    Repo.get_by!(Node, id: id, users_id: scope.users.id)
+    Repo.get_by!(Node, id: id, user_id: scope.user.id)
   end
 
   @doc """
@@ -97,7 +97,7 @@ defmodule DesafioTecnico.Telemetry do
 
   """
   def update_node(%Scope{} = scope, %Node{} = node, attrs) do
-    true = node.users_id == scope.users.id
+    true = node.user_id == scope.user.id
 
     with {:ok, node = %Node{}} <-
            node
@@ -121,7 +121,7 @@ defmodule DesafioTecnico.Telemetry do
 
   """
   def delete_node(%Scope{} = scope, %Node{} = node) do
-    true = node.users_id == scope.users.id
+    true = node.user_id == scope.user.id
 
     with {:ok, node = %Node{}} <-
            Repo.delete(node) do
@@ -140,7 +140,7 @@ defmodule DesafioTecnico.Telemetry do
 
   """
   def change_node(%Scope{} = scope, %Node{} = node, attrs \\ %{}) do
-    true = node.users_id == scope.users.id
+    true = node.user_id == scope.user.id
 
     Node.changeset(node, attrs, scope)
   end
@@ -159,15 +159,15 @@ defmodule DesafioTecnico.Telemetry do
 
   """
   def subscribe_node_metrics(%Scope{} = scope) do
-    key = scope.users.id
+    key = scope.user.id
 
-    Phoenix.PubSub.subscribe(DesafioTecnico.PubSub, "users:#{key}:node_metrics")
+    Phoenix.PubSub.subscribe(DesafioTecnico.PubSub, "user:#{key}:node_metrics")
   end
 
   defp broadcast_node_metric(%Scope{} = scope, message) do
-    key = scope.users.id
+    key = scope.user.id
 
-    Phoenix.PubSub.broadcast(DesafioTecnico.PubSub, "users:#{key}:node_metrics", message)
+    Phoenix.PubSub.broadcast(DesafioTecnico.PubSub, "user:#{key}:node_metrics", message)
   end
 
   @doc """
@@ -180,7 +180,7 @@ defmodule DesafioTecnico.Telemetry do
 
   """
   def list_node_metrics(%Scope{} = scope) do
-    Repo.all_by(NodeMetric, users_id: scope.users.id)
+    Repo.all_by(NodeMetric, user_id: scope.user.id)
   end
 
   @doc """
@@ -198,7 +198,7 @@ defmodule DesafioTecnico.Telemetry do
 
   """
   def get_node_metric!(%Scope{} = scope, id) do
-    Repo.get_by!(NodeMetric, id: id, users_id: scope.users.id)
+    Repo.get_by!(NodeMetric, id: id, user_id: scope.user.id)
   end
 
   @doc """
@@ -236,6 +236,8 @@ defmodule DesafioTecnico.Telemetry do
 
   """
   def update_node_metric(%Scope{} = scope, %NodeMetric{} = node_metric, attrs) do
+    true = node_metric.user_id == scope.user.id
+
     with {:ok, node_metric = %NodeMetric{}} <-
            node_metric
            |> NodeMetric.changeset(attrs, scope)
@@ -258,6 +260,7 @@ defmodule DesafioTecnico.Telemetry do
 
   """
   def delete_node_metric(%Scope{} = scope, %NodeMetric{} = node_metric) do
+    true = node_metric.user_id == scope.user.id
 
     with {:ok, node_metric = %NodeMetric{}} <-
            Repo.delete(node_metric) do
@@ -276,6 +279,8 @@ defmodule DesafioTecnico.Telemetry do
 
   """
   def change_node_metric(%Scope{} = scope, %NodeMetric{} = node_metric, attrs \\ %{}) do
+    true = node_metric.user_id == scope.user.id
+
     NodeMetric.changeset(node_metric, attrs, scope)
   end
 end
