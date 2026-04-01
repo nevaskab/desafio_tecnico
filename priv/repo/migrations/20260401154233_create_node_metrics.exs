@@ -15,8 +15,6 @@ defmodule DesafioTecnico.Repo.Migrations.CreateNodeMetrics do
 
     create index(:node_metrics, [:user_id])
 
-    create index(:node_metrics, [:node_id])
-
     create unique_index(:node_metrics, [:node_id], name: :node_metrics_node_id_index)
   end
 end
