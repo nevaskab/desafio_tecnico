@@ -5,19 +5,26 @@
 # is restricted to this project.
 
 # General application configuration
+# This file is responsible for configuring your application
+# and its dependencies with the aid of the Config module.
+#
+# This configuration file is loaded before any dependency and
+# is restricted to this project.
+
+# General application configuration
 import Config
 
 config :desafio_tecnico, :scopes,
-  users: [
+  user: [
     default: true,
     module: DesafioTecnico.Accounts.Scope,
     assign_key: :current_scope,
-    access_path: [:users, :id],
-    schema_key: :users_id,
+    access_path: [:user, :id],
+    schema_key: :user_id,
     schema_type: :id,
     schema_table: :users,
     test_data_fixture: DesafioTecnico.AccountsFixtures,
-    test_setup_helper: :register_and_log_in_users
+    test_setup_helper: :register_and_log_in_user
   ]
 
 config :desafio_tecnico,
@@ -33,7 +40,16 @@ config :desafio_tecnico, DesafioTecnicoWeb.Endpoint,
     layout: false
   ],
   pubsub_server: DesafioTecnico.PubSub,
-  live_view: [signing_salt: "Z2078c87"]
+  live_view: [signing_salt: "+jCybn3x"]
+
+# Configure the mailer
+#
+# By default it uses the "Local" adapter which stores the emails
+# locally. You can see the emails in your browser, at "/dev/mailbox".
+#
+# For production it's recommended to configure a different adapter
+# at the `config/runtime.exs`.
+config :desafio_tecnico, DesafioTecnico.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,
