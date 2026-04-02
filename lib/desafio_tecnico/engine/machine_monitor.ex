@@ -3,7 +3,7 @@ defmodule DesafioTecnico.Engine.MachineMonitor do
   alias DesafioTecnico.Telemetry
   require Logger
 
-  @table :machine_status_cache
+  @table :w_core_telemetry_cache
   @flush_interval :timer.seconds(5)
 
   def start_link(_opts) do
@@ -17,12 +17,12 @@ defmodule DesafioTecnico.Engine.MachineMonitor do
   @impl true
   def init(_) do
     # tabela ETS de armazenamento rápido e concorrente
-    :ets.new(@table, [:set, :public, :named_table, read_concurrency: true])
+    :ets.new(@table, [:set, :public, :named_table])
 
     # agenda o flush periódico para o banco de dados
-    :timer.send_interval(@flush_interval, :flush_to_db)
+    :timer.send_interval(@flush_interval, :flush_to_sqlite)
 
-    {:ok, %{dirty_ids: MapSet.new()}}
+    {:ok, %{dirty_nodes: MapSet.new()}}
   end
 
   @impl true
@@ -54,12 +54,14 @@ defmodule DesafioTecnico.Engine.MachineMonitor do
   def handle_info(:flush_to_db, state) do
     # Write-Behind: sincroniza os dados "sujos" do ETS para o banco de dados
     if MapSet.size(state.dirty_ids) > 0 do
-      nodes_to_sync = Enum.map(state.dirty_ids, fn id ->
-        [{_id, data}] = :ets.lookup(@table, id)
-        data
-      end)
+      nodes_to_sync =
+        Enum.map(state.dirty_ids, fn id ->
+          [{_id, data}] = :ets.lookup(@table, id)
+          data
+        end)
 
       Logger.info("Sincronizando #{MapSet.size(state.dirty_ids)} máquinas com SQLite...")
+
       Enum.each(nodes_to_sync, fn node_data ->
         Telemetry.update_node_metric(node_data.status, node_data.last_seen, node_data.payload)
       end)
