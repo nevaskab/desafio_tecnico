@@ -129,6 +129,7 @@ defmodule DesafioTecnicoWeb.UserLive.Login do
   end
 
   defp local_mail_adapter? do
-    Application.get_env(:desafio_tecnico, DesafioTecnico.Mailer)[:adapter] == Swoosh.Adapters.Local
+    Application.get_env(:desafio_tecnico, DesafioTecnico.Mailer)[:adapter] ==
+      Swoosh.Adapters.Local
   end
 end
