@@ -9,6 +9,7 @@ defmodule DesafioTecnico.Telemetry.NodeMetric do
     field :last_seen_at, :utc_datetime
     field :user_id, :id
 
+    # associação com o nó
     belongs_to :node, DesafioTecnico.Telemetry.Node
 
     timestamps(type: :utc_datetime)

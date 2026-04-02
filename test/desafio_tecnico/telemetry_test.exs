@@ -46,7 +46,11 @@ defmodule DesafioTecnico.TelemetryTest do
     test "update_node/3 with valid data updates the node" do
       scope = users_scope_fixture()
       node = node_fixture(scope)
-      update_attrs = %{location: "some updated location", machine_identifier: "some updated machine_identifier"}
+
+      update_attrs = %{
+        location: "some updated location",
+        machine_identifier: "some updated machine_identifier"
+      }
 
       assert {:ok, %Node{} = node} = Telemetry.update_node(scope, node, update_attrs)
       assert node.location == "some updated location"
@@ -97,7 +101,12 @@ defmodule DesafioTecnico.TelemetryTest do
     import DesafioTecnico.AccountsFixtures, only: [users_scope_fixture: 0]
     import DesafioTecnico.TelemetryFixtures
 
-    @invalid_attrs %{status: nil, total_events_processed: nil, last_payload: nil, last_seen_at: nil}
+    @invalid_attrs %{
+      status: nil,
+      total_events_processed: nil,
+      last_payload: nil,
+      last_seen_at: nil
+    }
 
     test "list_node_metrics/1 returns all scoped node_metrics" do
       scope = users_scope_fixture()
@@ -113,11 +122,20 @@ defmodule DesafioTecnico.TelemetryTest do
       node_metric = node_metric_fixture(scope)
       other_scope = users_scope_fixture()
       assert Telemetry.get_node_metric!(scope, node_metric.id) == node_metric
-      assert_raise Ecto.NoResultsError, fn -> Telemetry.get_node_metric!(other_scope, node_metric.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Telemetry.get_node_metric!(other_scope, node_metric.id)
+      end
     end
 
     test "create_node_metric/2 with valid data creates a node_metric" do
-      valid_attrs = %{status: "some status", total_events_processed: 42, last_payload: %{}, last_seen_at: ~U[2026-03-30 15:42:00Z]}
+      valid_attrs = %{
+        status: "some status",
+        total_events_processed: 42,
+        last_payload: %{},
+        last_seen_at: ~U[2026-03-30 15:42:00Z]
+      }
+
       scope = users_scope_fixture()
 
       assert {:ok, %NodeMetric{} = node_metric} = Telemetry.create_node_metric(scope, valid_attrs)
@@ -136,9 +154,17 @@ defmodule DesafioTecnico.TelemetryTest do
     test "update_node_metric/3 with valid data updates the node_metric" do
       scope = users_scope_fixture()
       node_metric = node_metric_fixture(scope)
-      update_attrs = %{status: "some updated status", total_events_processed: 43, last_payload: %{}, last_seen_at: ~U[2026-03-31 15:42:00Z]}
 
-      assert {:ok, %NodeMetric{} = node_metric} = Telemetry.update_node_metric(scope, node_metric, update_attrs)
+      update_attrs = %{
+        status: "some updated status",
+        total_events_processed: 43,
+        last_payload: %{},
+        last_seen_at: ~U[2026-03-31 15:42:00Z]
+      }
+
+      assert {:ok, %NodeMetric{} = node_metric} =
+               Telemetry.update_node_metric(scope, node_metric, update_attrs)
+
       assert node_metric.status == "some updated status"
       assert node_metric.total_events_processed == 43
       assert node_metric.last_payload == %{}
@@ -158,7 +184,10 @@ defmodule DesafioTecnico.TelemetryTest do
     test "update_node_metric/3 with invalid data returns error changeset" do
       scope = users_scope_fixture()
       node_metric = node_metric_fixture(scope)
-      assert {:error, %Ecto.Changeset{}} = Telemetry.update_node_metric(scope, node_metric, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Telemetry.update_node_metric(scope, node_metric, @invalid_attrs)
+
       assert node_metric == Telemetry.get_node_metric!(scope, node_metric.id)
     end
 
@@ -166,7 +195,10 @@ defmodule DesafioTecnico.TelemetryTest do
       scope = users_scope_fixture()
       node_metric = node_metric_fixture(scope)
       assert {:ok, %NodeMetric{}} = Telemetry.delete_node_metric(scope, node_metric)
-      assert_raise Ecto.NoResultsError, fn -> Telemetry.get_node_metric!(scope, node_metric.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Telemetry.get_node_metric!(scope, node_metric.id)
+      end
     end
 
     test "delete_node_metric/2 with invalid scope raises" do
@@ -226,7 +258,11 @@ defmodule DesafioTecnico.TelemetryTest do
     test "update_node/3 with valid data updates the node" do
       scope = user_scope_fixture()
       node = node_fixture(scope)
-      update_attrs = %{location: "some updated location", machine_identifier: "some updated machine_identifier"}
+
+      update_attrs = %{
+        location: "some updated location",
+        machine_identifier: "some updated machine_identifier"
+      }
 
       assert {:ok, %Node{} = node} = Telemetry.update_node(scope, node, update_attrs)
       assert node.location == "some updated location"
@@ -277,7 +313,12 @@ defmodule DesafioTecnico.TelemetryTest do
     import DesafioTecnico.AccountsFixtures, only: [user_scope_fixture: 0]
     import DesafioTecnico.TelemetryFixtures
 
-    @invalid_attrs %{status: nil, total_events_processed: nil, last_payload: nil, last_seen_at: nil}
+    @invalid_attrs %{
+      status: nil,
+      total_events_processed: nil,
+      last_payload: nil,
+      last_seen_at: nil
+    }
 
     test "list_node_metrics/1 returns all scoped node_metrics" do
       scope = user_scope_fixture()
@@ -293,11 +334,20 @@ defmodule DesafioTecnico.TelemetryTest do
       node_metric = node_metric_fixture(scope)
       other_scope = user_scope_fixture()
       assert Telemetry.get_node_metric!(scope, node_metric.id) == node_metric
-      assert_raise Ecto.NoResultsError, fn -> Telemetry.get_node_metric!(other_scope, node_metric.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Telemetry.get_node_metric!(other_scope, node_metric.id)
+      end
     end
 
     test "create_node_metric/2 with valid data creates a node_metric" do
-      valid_attrs = %{status: "some status", total_events_processed: 42, last_payload: %{}, last_seen_at: ~U[2026-03-31 14:57:00Z]}
+      valid_attrs = %{
+        status: "some status",
+        total_events_processed: 42,
+        last_payload: %{},
+        last_seen_at: ~U[2026-03-31 14:57:00Z]
+      }
+
       scope = user_scope_fixture()
 
       assert {:ok, %NodeMetric{} = node_metric} = Telemetry.create_node_metric(scope, valid_attrs)
@@ -316,9 +366,17 @@ defmodule DesafioTecnico.TelemetryTest do
     test "update_node_metric/3 with valid data updates the node_metric" do
       scope = user_scope_fixture()
       node_metric = node_metric_fixture(scope)
-      update_attrs = %{status: "some updated status", total_events_processed: 43, last_payload: %{}, last_seen_at: ~U[2026-04-01 14:57:00Z]}
 
-      assert {:ok, %NodeMetric{} = node_metric} = Telemetry.update_node_metric(scope, node_metric, update_attrs)
+      update_attrs = %{
+        status: "some updated status",
+        total_events_processed: 43,
+        last_payload: %{},
+        last_seen_at: ~U[2026-04-01 14:57:00Z]
+      }
+
+      assert {:ok, %NodeMetric{} = node_metric} =
+               Telemetry.update_node_metric(scope, node_metric, update_attrs)
+
       assert node_metric.status == "some updated status"
       assert node_metric.total_events_processed == 43
       assert node_metric.last_payload == %{}
@@ -338,7 +396,10 @@ defmodule DesafioTecnico.TelemetryTest do
     test "update_node_metric/3 with invalid data returns error changeset" do
       scope = user_scope_fixture()
       node_metric = node_metric_fixture(scope)
-      assert {:error, %Ecto.Changeset{}} = Telemetry.update_node_metric(scope, node_metric, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Telemetry.update_node_metric(scope, node_metric, @invalid_attrs)
+
       assert node_metric == Telemetry.get_node_metric!(scope, node_metric.id)
     end
 
@@ -346,7 +407,10 @@ defmodule DesafioTecnico.TelemetryTest do
       scope = user_scope_fixture()
       node_metric = node_metric_fixture(scope)
       assert {:ok, %NodeMetric{}} = Telemetry.delete_node_metric(scope, node_metric)
-      assert_raise Ecto.NoResultsError, fn -> Telemetry.get_node_metric!(scope, node_metric.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Telemetry.get_node_metric!(scope, node_metric.id)
+      end
     end
 
     test "delete_node_metric/2 with invalid scope raises" do
@@ -369,7 +433,12 @@ defmodule DesafioTecnico.TelemetryTest do
     import DesafioTecnico.AccountsFixtures, only: [user_scope_fixture: 0]
     import DesafioTecnico.TelemetryFixtures
 
-    @invalid_attrs %{status: nil, total_events_processed: nil, last_payload: nil, last_seen_at: nil}
+    @invalid_attrs %{
+      status: nil,
+      total_events_processed: nil,
+      last_payload: nil,
+      last_seen_at: nil
+    }
 
     test "list_node_metrics/1 returns all scoped node_metrics" do
       scope = user_scope_fixture()
@@ -385,11 +454,20 @@ defmodule DesafioTecnico.TelemetryTest do
       node_metric = node_metric_fixture(scope)
       other_scope = user_scope_fixture()
       assert Telemetry.get_node_metric!(scope, node_metric.id) == node_metric
-      assert_raise Ecto.NoResultsError, fn -> Telemetry.get_node_metric!(other_scope, node_metric.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Telemetry.get_node_metric!(other_scope, node_metric.id)
+      end
     end
 
     test "create_node_metric/2 with valid data creates a node_metric" do
-      valid_attrs = %{status: "some status", total_events_processed: 42, last_payload: %{}, last_seen_at: ~U[2026-03-31 15:42:00Z]}
+      valid_attrs = %{
+        status: "some status",
+        total_events_processed: 42,
+        last_payload: %{},
+        last_seen_at: ~U[2026-03-31 15:42:00Z]
+      }
+
       scope = user_scope_fixture()
 
       assert {:ok, %NodeMetric{} = node_metric} = Telemetry.create_node_metric(scope, valid_attrs)
@@ -408,9 +486,17 @@ defmodule DesafioTecnico.TelemetryTest do
     test "update_node_metric/3 with valid data updates the node_metric" do
       scope = user_scope_fixture()
       node_metric = node_metric_fixture(scope)
-      update_attrs = %{status: "some updated status", total_events_processed: 43, last_payload: %{}, last_seen_at: ~U[2026-04-01 15:42:00Z]}
 
-      assert {:ok, %NodeMetric{} = node_metric} = Telemetry.update_node_metric(scope, node_metric, update_attrs)
+      update_attrs = %{
+        status: "some updated status",
+        total_events_processed: 43,
+        last_payload: %{},
+        last_seen_at: ~U[2026-04-01 15:42:00Z]
+      }
+
+      assert {:ok, %NodeMetric{} = node_metric} =
+               Telemetry.update_node_metric(scope, node_metric, update_attrs)
+
       assert node_metric.status == "some updated status"
       assert node_metric.total_events_processed == 43
       assert node_metric.last_payload == %{}
@@ -430,7 +516,10 @@ defmodule DesafioTecnico.TelemetryTest do
     test "update_node_metric/3 with invalid data returns error changeset" do
       scope = user_scope_fixture()
       node_metric = node_metric_fixture(scope)
-      assert {:error, %Ecto.Changeset{}} = Telemetry.update_node_metric(scope, node_metric, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Telemetry.update_node_metric(scope, node_metric, @invalid_attrs)
+
       assert node_metric == Telemetry.get_node_metric!(scope, node_metric.id)
     end
 
@@ -438,7 +527,10 @@ defmodule DesafioTecnico.TelemetryTest do
       scope = user_scope_fixture()
       node_metric = node_metric_fixture(scope)
       assert {:ok, %NodeMetric{}} = Telemetry.delete_node_metric(scope, node_metric)
-      assert_raise Ecto.NoResultsError, fn -> Telemetry.get_node_metric!(scope, node_metric.id) end
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Telemetry.get_node_metric!(scope, node_metric.id)
+      end
     end
 
     test "delete_node_metric/2 with invalid scope raises" do
