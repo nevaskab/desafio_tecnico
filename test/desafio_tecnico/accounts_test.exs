@@ -139,7 +139,11 @@ defmodule DesafioTecnico.AccountsTest do
 
       token =
         extract_users_token(fn url ->
-          Accounts.deliver_users_update_email_instructions(%{users | email: email}, users.email, url)
+          Accounts.deliver_users_update_email_instructions(
+            %{users | email: email},
+            users.email,
+            url
+          )
         end)
 
       %{users: users, token: token, email: email}

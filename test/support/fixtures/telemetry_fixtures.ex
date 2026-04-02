@@ -7,7 +7,8 @@ defmodule DesafioTecnico.TelemetryFixtures do
   @doc """
   Generate a unique node machine_identifier.
   """
-  def unique_node_machine_identifier, do: "some machine_identifier#{System.unique_integer([:positive])}"
+  def unique_node_machine_identifier,
+    do: "some machine_identifier#{System.unique_integer([:positive])}"
 
   @doc """
   Generate a node.

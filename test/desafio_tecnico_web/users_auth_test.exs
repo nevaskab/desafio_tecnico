@@ -148,7 +148,9 @@ defmodule DesafioTecnicoWeb.UsersAuthTest do
       users_token = Accounts.generate_users_session_token(users)
 
       conn =
-        conn |> put_session(:users_token, users_token) |> UsersAuth.fetch_current_scope_for_users([])
+        conn
+        |> put_session(:users_token, users_token)
+        |> UsersAuth.fetch_current_scope_for_users([])
 
       assert conn.assigns.current_scope.users.id == users.id
       assert conn.assigns.current_scope.users.authenticated_at == users.authenticated_at
@@ -283,7 +285,10 @@ defmodule DesafioTecnicoWeb.UsersAuthTest do
   end
 
   describe "on_mount :require_sudo_mode" do
-    test "allows users that have authenticated in the last 10 minutes", %{conn: conn, users: users} do
+    test "allows users that have authenticated in the last 10 minutes", %{
+      conn: conn,
+      users: users
+    } do
       users_token = Accounts.generate_users_session_token(users)
       session = conn |> put_session(:users_token, users_token) |> get_session()
 

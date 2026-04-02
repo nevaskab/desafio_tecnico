@@ -11,7 +11,10 @@ defmodule DesafioTecnicoWeb.UsersLive.ConfirmationTest do
   end
 
   describe "Confirm users" do
-    test "renders confirmation page for unconfirmed users", %{conn: conn, unconfirmed_users: users} do
+    test "renders confirmation page for unconfirmed users", %{
+      conn: conn,
+      unconfirmed_users: users
+    } do
       token =
         extract_users_token(fn url ->
           Accounts.deliver_login_instructions(users, url)

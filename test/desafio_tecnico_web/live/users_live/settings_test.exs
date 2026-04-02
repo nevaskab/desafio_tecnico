@@ -167,7 +167,11 @@ defmodule DesafioTecnicoWeb.UsersLive.SettingsTest do
 
       token =
         extract_users_token(fn url ->
-          Accounts.deliver_users_update_email_instructions(%{users | email: email}, users.email, url)
+          Accounts.deliver_users_update_email_instructions(
+            %{users | email: email},
+            users.email,
+            url
+          )
         end)
 
       %{conn: log_in_users(conn, users), token: token, email: email, users: users}
