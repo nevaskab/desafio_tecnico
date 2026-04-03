@@ -6,7 +6,7 @@ defmodule DesafioTecnicoWeb.DashboardLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket), do: Phoenix.PubSub.subscribe(Planta42.PubSub, @topic)
+    if connected?(socket), do: Phoenix.PubSub.subscribe(DesafioTecnico.PubSub, @topic)
 
     nodes =
       :ets.tab2list(@table)
@@ -32,8 +32,8 @@ defmodule DesafioTecnicoWeb.DashboardLive do
     ~H"""
     <div class="p-6">
       <h1 class="text-2xl font-bold mb-4 text-center">Dashboard - Desafio Técnico Planta 42</h1>
-      
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+      <div class="grid grid-cols-4 md:grid-cols-3 gap-4">
         <div
           :for={node <- @nodes}
           class={[
@@ -43,7 +43,7 @@ defmodule DesafioTecnicoWeb.DashboardLive do
           ]}
         >
           <div class="flex justify-between items-center">
-            <span class="font-mono font-bold text-lg">{node.id}</span>
+            <span class="font-mono font-bold text-lg text-black">{node.id}</span>
             <span class={[
               "px-2 py-1 rounded text-xs uppercase font-bold",
               node.status == "error" && "bg-red-500 text-white",
@@ -52,7 +52,7 @@ defmodule DesafioTecnicoWeb.DashboardLive do
               {node.status}
             </span>
           </div>
-          
+
           <div class="mt-2 text-sm text-gray-600">
             Eventos processados: <span class="font-bold">{node.count}</span>
           </div>

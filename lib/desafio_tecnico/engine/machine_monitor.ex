@@ -14,10 +14,14 @@ defmodule DesafioTecnico.Engine.MachineMonitor do
     GenServer.cast(__MODULE__, {:ingest, node_id, payload})
   end
 
+  def flush do
+    GenServer.call(__MODULE__, :flush, :infinity)
+  end
+
   @impl true
   def init(_) do
     # tabela ETS de armazenamento rápido e concorrente
-    :ets.new(@table, [:set, :public, :named_table])
+    :ets.new(@table, [:set, :public, :named_table, {:read_concurrency, true}])
 
     # agenda o flush periódico para o banco de dados
     :timer.send_interval(@flush_interval, :flush_to_sqlite)
@@ -40,7 +44,7 @@ defmodule DesafioTecnico.Engine.MachineMonitor do
 
     if new_status != last_status do
       Phoenix.PubSub.broadcast(
-        Planta42.PubSub,
+        DesafioTecnico.PubSub,
         "telemetry:nodes",
         {:status_changed, node_id, new_status}
       )
@@ -51,22 +55,47 @@ defmodule DesafioTecnico.Engine.MachineMonitor do
   end
 
   @impl true
-  def handle_info(:flush_to_db, state) do
-    # Write-Behind: sincroniza os dados "sujos" do ETS para o banco de dados
-    if MapSet.size(state.dirty_ids) > 0 do
-      nodes_to_sync =
-        Enum.map(state.dirty_ids, fn id ->
-          [{_id, data}] = :ets.lookup(@table, id)
-          data
-        end)
+  def handle_call(:flush, _from, state) do
+    {:reply, :ok, flush_dirty_nodes(state)}
+  end
 
-      Logger.info("Sincronizando #{MapSet.size(state.dirty_ids)} máquinas com SQLite...")
+  @impl true
+  def handle_info(:flush_to_sqlite, state) do
+    {:noreply, flush_dirty_nodes(state)}
+  end
 
-      Enum.each(nodes_to_sync, fn node_data ->
-        Telemetry.update_node_metric(node_data.status, node_data.last_seen, node_data.payload)
+  defp flush_dirty_nodes(state) do
+    dirty_count = MapSet.size(state.dirty_nodes)
+
+    if dirty_count > 0 do
+      Logger.info("Sincronizando #{dirty_count} maquinas com SQLite...")
+
+      Enum.each(state.dirty_nodes, fn id ->
+        case :ets.lookup(@table, id) do
+          [{^id, status, count, payload, last_seen_at}] ->
+            attrs = %{
+              status: status,
+              total_events_processed: count,
+              last_payload: payload,
+              last_seen_at: last_seen_at
+            }
+
+            case Telemetry.upsert_machine_metric(id, attrs) do
+              {:ok, _node_metric} ->
+                :ok
+
+              {:error, reason} ->
+                Logger.error("Falha ao sincronizar #{inspect(id)} com SQLite: #{inspect(reason)}")
+            end
+
+          [] ->
+            Logger.warning(
+              "Ignorando flush de #{inspect(id)} porque o cache ETS nao tem mais dados."
+            )
+        end
       end)
     end
 
-    {:noreply, %{state | dirty_ids: MapSet.new()}}
+    %{state | dirty_nodes: MapSet.new()}
   end
 end
