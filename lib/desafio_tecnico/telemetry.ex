@@ -248,6 +248,25 @@ defmodule DesafioTecnico.Telemetry do
   end
 
   @doc """
+  Upserts the latest machine snapshot into node_metrics using the machine identifier.
+  """
+  def upsert_machine_metric(machine_id, attrs) when is_binary(machine_id) and is_map(attrs) do
+    case Repo.get_by(Node, machine_identifier: machine_id) do
+      nil ->
+        {:error, :node_not_found}
+
+      %Node{} = node ->
+        node_metric =
+          Repo.get_by(NodeMetric, node_id: node.id) ||
+            %NodeMetric{node_id: node.id, user_id: node.user_id}
+
+        node_metric
+        |> machine_metric_changeset(node, attrs)
+        |> Repo.insert_or_update()
+    end
+  end
+
+  @doc """
   Deletes a node_metric.
 
   ## Examples
@@ -282,5 +301,13 @@ defmodule DesafioTecnico.Telemetry do
     true = node_metric.user_id == scope.user.id
 
     NodeMetric.changeset(node_metric, attrs, scope)
+  end
+
+  defp machine_metric_changeset(%NodeMetric{} = node_metric, %Node{} = node, attrs) do
+    node_metric
+    |> Ecto.Changeset.cast(attrs, [:status, :total_events_processed, :last_payload, :last_seen_at])
+    |> Ecto.Changeset.validate_required([:status, :total_events_processed, :last_seen_at])
+    |> Ecto.Changeset.put_change(:node_id, node.id)
+    |> Ecto.Changeset.put_change(:user_id, node.user_id)
   end
 end
