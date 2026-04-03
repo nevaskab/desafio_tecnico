@@ -6,13 +6,11 @@ services:
     image: desafio-tecnico:latest
     container_name: desafio-tecnico
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
-      DATABASE_URL: ${DATABASE_URL}
-      SECRET_KEY: ${SECRET_KEY}
-      PHX_HOST: ${PHX_HOST:-localhost}
-      PORT: ${PORT:-4000}
       PHX_SERVER: "true"
     ports:
-      - "${PORT:-4000}:4000"
+      - "${PORT:-4000}:${PORT:-4000}"
     volumes:
       - ./data:/etc/desafio_tecnico
